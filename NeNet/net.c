@@ -4,6 +4,8 @@
 
 //NEURON
 
+size_t *seed = 2003;
+
 double sigma(double x)
 {
     return 1.0/(1.0 - exp(-1.0 * x));
@@ -69,7 +71,35 @@ void new_Network(Network *_n,
                 size_t _layer_sizes[],
                 Neuron _neurons[])
 {
-    _n->nb_layer = _nb_layer;
+    _n->nb_layer    = _nb_layer;
     _n->layer_sizes = _layer_sizes;
     _n->neurons = _neurons;
+}
+
+
+void randomShuffle(double tab1[], double tab2[], size_t s){
+    for(size_t i; i < s; i++){
+        double t1 = tab1[i], t2 = tab2[i];
+        tab1[i] = tab1[*seed%s];
+        tab2[i] = tab2[*seed%s];
+        tab1[*seed%s] = t1;
+        tab2[*seed%s] = t2;
+        *seed *= 73;
+        *seed %= 20000;
+    }
+}
+
+void SGD(double train_in[],
+         double train_out[], 
+         size_t train_size, 
+         size_t epochs, 
+         size_t mini_natch_size, 
+         double eta)
+{
+    for(size_t i = 0; i < epochs; i++){
+        randomShuffle(train_in, train_out, train_size);
+        for(size_t j = 0; j < train_size; j++){
+            
+        }
+    }
 }

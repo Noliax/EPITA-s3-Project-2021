@@ -1,42 +1,71 @@
-
 #include <stdio.h>
 #include <math.h>
 #include "net.h"
 
+//NEURON
 
-void learn(&exemple, char ans){
-	//FIXME
+double simga(double x)
+{
+    return 1.0/(1.0 - exp(-1.0 * x));
 }
 
-void shuffle(int *arr[]){
+void Neuron_out(Neuron *n)
+{ 
+    n->output = sigma(dot(n->inputs[], n->weights[], n->nb_inputs));
 }
 
-char read(&image){
-	//FIXME
-	return 'c';
+double dot(double in[], double wei[], size_t s)
+{
+    double res = 0.0;
+    for(size_t i = 0; i < sin; i++)
+        res += in[i] * wei[i];
+    return res;
 }
 
-double sigma(double x){
-	return 1.0/(1.0*exp(-x));
+void new_Neuron(Neuron *_n,
+                double _bias,
+                double *_outputs,
+                double *_weigths,
+                size_t _nb_inputs,
+                size_t _nb_outputs)
+{
+    _n->outputs = _outputs;
+    _n->nb_inputs = _nb_inputs;
+    _n->nb_outputs = _nb_outputs;
+    _n->bias = _bias;
+    _n->weigths = _weigths;
+    _n->inputs = malloc(_nb_inputs * sizeof(double));
+    _n->nextInput = 0;
 }
 
-Network init(){
-    //FIXME
+//NETWORK
+
+void Net_access_neuron( size_t layer,
+                        size_t number,
+                        Network *net,
+                        Neuron *ret_neuron)
+{
+    *ret_neuron = &(net->)
 }
 
-double feedForward(Network* n, double a){
-    for(size_t i = 0; i < length(n->biases) && i < length(n->weights); i++){
-        a = sigma((double)(n->weights[i]) * a + (double)(n->biases[i]));
+void Net_feed_forward(size_t layer, Network *net)
+{
+    for(size_t i = 0; i < net->layer_sizes[layer]; i++){
+        Neuron *n = (Net_access_neuron(layer, i, *net);
+        Neuron_out(*n);
+        if(layer < net->nb_layer-1)
+            Neuron next* = Net_access_neuron(layer + 1, i, *n);
+            next->inputs[n->nextInput++] = n->output;
+        n->nextInput = 0;
     }
-    return a;
 }
 
-void SGD(Network* n, training_data, int epochs, int mini_batch_size, int eta){
-    int n = training_data.length;
-    for(;epoches > 0; epoches--){
-        shuffle(training_data);
-        mini_batches
-    }
+void newNetwork(Network *_n, 
+                size_t _nb_layer,
+                size_t _layer_sizes[],
+                Neuron _neurons[])
+{
+    _n->nb_layer = _nb_layer;
+    _n->layer_sizes = _layer_sizes;
+    _n->neurons = _neurons;
 }
-
-

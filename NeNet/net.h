@@ -11,7 +11,7 @@ typedef struct _Neuron{
     double *inputs, *weights;
 }Neuron;
 
-double simga(double x);
+double sigma(double x);
 
 void Neuron_out(Neuron *neuron);
 
@@ -40,7 +40,7 @@ void Net_access_neuron( size_t layer,
 
 void Net_feed_forward(size_t layer, Network *net);
 
-void newNetwork(Network *n, 
+void new_Network(Network *n, 
                 size_t _nb_layer,
                 size_t _layer_sizes[],
                 Neuron _neurons[]);

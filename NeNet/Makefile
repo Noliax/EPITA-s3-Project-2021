@@ -1,24 +1,24 @@
-# Simple Makefile
+# Makefile
  
-# Compilers vars
-CC=gcc
-CPPFLAGS= -MMD
-CFLAGS= -Wall -Wextra -std=c99 -O2
-LDFLAGS=
-LDLIBS= -lm
+CC = gcc -fsanitize=address
+CPPFLAGS = -MMD
+CFLAGS = -Wall -Wextra -std=c99 -O0 -g
+LDFLAGS =
+LDLIBS = -lm
+
+SRC = net.c net_test.c
+OBJ = ${SRC:.c=.o}
+DEP = ${SRC:.c=.d}
  
-SRC= net_test.c
-DEP= ${SRC:.c=.d}
-PRG= ${SRC:.c=}
+all: net_test
  
-all: ${PRG}
+net_test: ${OBJ}
+ 
+.PHONY: clean
+ 
+clean:
+	${RM} ${OBJ} ${DEP} net_test
  
 -include ${DEP}
  
-clean:
-	rm -f *.o
-	rm -f ${DEP}
-	rm -f ${PRG}
- 
-# END Makefile
- 
+# END

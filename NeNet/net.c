@@ -1,105 +1,114 @@
 #include <stdio.h>
-#include <math.h>
+#include <stdlib.h>
 #include "net.h"
 
 //NEURON
 
-size_t *seed = 2003;
+void Neuron_init(Neuron *n, size_t _in, size_t _out, double _bias)
+{
+    n->nb_in = _in;
+    n->nb_out = _out;
+    n->bias = _bias;
+    n->inputs = malloc(_in * sizeof(double));
+    n->out_id = malloc(_out * sizeof(size_t));
+    n->weights = malloc(_in * sizeof(double));
+    n->nb_wei = _in;
+}
 
 double sigma(double x)
 {
-    return 1.0/(1.0 - exp(-1.0 * x));
+    return 1/(1 - exp(-x));
+}
+
+double dot(double w[], double i[], size_t l)
+{
+    double sum = 0;
+    for(size_t j = 0; j < l; j++)
+        sum += w[j] * i[j];
+    return sum;
+}
+
+void Neuron_in(Neuron *n, double in)
+{
+    n->inputs[n->next_in] = in;
+    n->next_in++;
 }
 
 void Neuron_out(Neuron *n)
-{ 
-    n->output = sigma(dot(n->inputs, n->weights, n->nb_inputs));
-}
-
-double dot(double in[], double wei[], size_t s)
 {
-    double res = 0.0;
-    for(size_t i = 0; i < s; i++)
-        res += in[i] * wei[i];
-    return res;
-}
-
-void new_Neuron(Neuron *_n,
-                double _bias,
-                double *_outputs,
-                double *_weights,
-                size_t _nb_inputs,
-                size_t _nb_outputs)
-{
-    _n->outputs = _outputs;
-    _n->nb_inputs = _nb_inputs;
-    _n->nb_outputs = _nb_outputs;
-    _n->bias = _bias;
-    _n->weights = _weights;
-    _n->inputs = malloc(_nb_inputs * sizeof(double));
-    _n->nextInput = 0;
+n->output = sigma(
+                    dot(
+                        n->weights,
+                        n->inputs,
+                        n-> nb_in)
+                    - n->bias);    
 }
 
 //NETWORK
 
-void Net_access_neuron( size_t layer,
-                        size_t number,
-                        Network *net,
-                        Neuron *ret_neuron)
+void Net_init(Network *net,
+              size_t _nb_layer,
+              size_t *_layer_sizes)
 {
-    *ret_neuron = net->neurons[layer*net->nb_layer + number];
+    printf("\n*****-----*****\n");
+    printf("<-<-<-***->->->\nnb_layer = %zu\n", net->nb_layer);
+    net->nb_layer = _nb_layer;
+    printf("<-<-<-***->->->\n");
+    for(size_t i = 0; i < _nb_layer; i++)
+        net->layer_sizes[i] = _layer_sizes[i];    
+    //net->layer_sizes = _layer_sizes;
+    size_t sum = 0;
+    for(size_t i = 0; i < _nb_layer; i++)
+        sum += _layer_sizes[i];
+    //Neuron mat[sum];
+    //net->mat = mat;
 }
 
-void Net_feed_forward(size_t layer, Network *net)
+void Net_place(Network *net, Neuron *n, size_t layer, size_t i)
 {
-    for(size_t i = 0; i < net->layer_sizes[layer]; i++){
-        Neuron *n;
-        Net_access_neuron(layer, i, net, n);
+    *Net_access(net, layer, i) = *n;
+}
+
+Neuron* Net_access(Network *net, size_t layer, size_t i)
+{
+    size_t id = 0;
+    for(size_t j = 0; j < layer; j++)
+        id += net->layer_sizes[j];
+    id += i;
+    return &(net->mat[id]);
+}
+
+void Net_fire(Network *net, size_t layer)
+{
+    for(size_t i = 0; i < net->layer_sizes[layer]; i++)
+    {
+        Neuron *n = Net_access(net, layer, i);
         Neuron_out(n);
-        if(layer < net->nb_layer-1)
-        {
-            Neuron next;
-            Net_access_neuron(layer + 1, i, net, &next);
-            next.inputs[n->nextInput++] = n->output;
-        }
-        n->nextInput = 0;
+        for(size_t j= 0; j < n->nb_out; j++)
+            Neuron_in(
+                    Net_access(
+                                net,
+                                layer+1,
+                                n->out_id[j]),
+                    n->output);
+        n->next_in = 0;
     }
 }
 
-void new_Network(Network *_n, 
-                size_t _nb_layer,
-                size_t _layer_sizes[],
-                Neuron _neurons[])
+void Net_feed_forward(Network *net)
 {
-    _n->nb_layer    = _nb_layer;
-    _n->layer_sizes = _layer_sizes;
-    _n->neurons = _neurons;
+    for(size_t i = 0; i < net->nb_layer; i++)
+        Net_fire(net, i);
 }
 
 
-void randomShuffle(double tab1[], double tab2[], size_t s){
-    for(size_t i; i < s; i++){
-        double t1 = tab1[i], t2 = tab2[i];
-        tab1[i] = tab1[*seed%s];
-        tab2[i] = tab2[*seed%s];
-        tab1[*seed%s] = t1;
-        tab2[*seed%s] = t2;
-        *seed *= 73;
-        *seed %= 20000;
-    }
-}
 
-void SGD(double train_in[],
-         double train_out[], 
-         size_t train_size, 
-         size_t epochs, 
-         size_t mini_natch_size, 
-         double eta)
-{
-    for(size_t i = 0; i < epochs; i++){
-        randomShuffle(train_in, train_out, train_size);
-        for(size_t j = 0; j < train_size; j++){
-            
-        }
-    }
-}
+
+
+
+
+
+
+
+
+

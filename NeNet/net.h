@@ -1,56 +1,40 @@
 #ifndef NET_H
-#define NET_H 
+#define NET_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
+//NEURON
 typedef struct _Neuron{
-    size_t nb_inputs, nb_outputs, nextInput;
-    double  output, bias;
-    size_t *outputs;
-    double *inputs, *weights;
-}Neuron;
+    double *inputs, output, *weights, bias;
+    size_t nb_in, nb_out, nb_wei, *out_id, next_in;
+} Neuron;
 
 double sigma(double x);
 
-void Neuron_out(Neuron *neuron);
+double dot(double w[], double i[], size_t l);
 
-void new_Neuron(Neuron *_n,
-                double _bias,
-                double *_outputs,
-                double *_weights,
-                size_t _nb_inputs,
-                size_t _nb_outputs);
-;
+void Neuron_init(Neuron *n, size_t _in, size_t _out, double _bias);
 
-double dot(double in[], double out[], size_t s);
+void Neuron_in(Neuron *n, double in);
 
+void Neuron_out(Neuron *n);
 
+//NETWORK
 
 typedef struct _Network{
     size_t nb_layer;
-    size_t *layer_sizes;
-    Neuron *neurons;
-}Network;
+    size_t layer_sizes[15];
+    Neuron mat[10000];
+} Network;
 
-void Net_access_neuron( size_t layer,
-                        size_t number,
-                        Network *net,
-                        Neuron *ret_neuron);
+void Net_init(Network *net, size_t _nb_layer, size_t *_layer_sizes);
 
-void Net_feed_forward(size_t layer, Network *net);
+Neuron* Net_access(Network *net, size_t layer, size_t i);
 
-void randomShuffle(double tab1[], double tab2[], size_t s);
+void Net_fire(Network *net, size_t layer);
 
-void new_Network(Network *n, 
-                size_t _nb_layer,
-                size_t _layer_sizes[],
-                Neuron _neurons[]);
+void Net_feed_forward(Network *net);
 
-void SGD(double train_in[],
-         double train_out[], 
-         size_t train_size, 
-         size_t epochs, 
-         size_t mini_natch_size, 
-         double eta);
 #endif

@@ -3,38 +3,52 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
-//NEURON
 typedef struct _Neuron{
-    double *inputs, output, *weights, bias;
-    size_t nb_in, nb_out, nb_wei, *out_id, next_in;
-} Neuron;
+    size_t nb_in;
+    double output;
+    double bias;
+    double delta;
+    double *weights;
+}Neuron;
 
-double sigma(double x);
-
-double dot(double w[], double i[], size_t l);
-
-void Neuron_init(Neuron *n, size_t _in, size_t _out, double _bias);
-
-void Neuron_in(Neuron *n, double in);
-
-void Neuron_out(Neuron *n);
-
-//NETWORK
+typedef struct _Layer{
+    size_t size;
+    Neuron *layer;
+}Layer;
 
 typedef struct _Network{
     size_t nb_layer;
-    size_t layer_sizes[15];
-    Neuron mat[10000];
-} Network;
+    Layer *net;
+}Network;
 
-void Net_init(Network *net, size_t _nb_layer, size_t *_layer_sizes);
+double sigma(double x);
 
-Neuron* Net_access(Network *net, size_t layer, size_t i);
+double *doubleArray(size_t sx, double val);
 
-void Net_fire(Network *net, size_t layer);
+double *Array_random(size_t sx);
 
-void Net_feed_forward(Network *net);
+//Neuron
 
+void init_Neuron(Neuron *n, size_t nb_in);
+
+void print_array(double *arr, size_t size);
+
+void print_Neuron(Neuron *n);
+
+//Layer
+
+void init_Layer(Layer *l, size_t size);
+
+void print_Layer(Layer *l);
+
+//Network
+
+void init_Network(Network *net, size_t nb_layer);
+
+void feed_forward_Network(Network *net);
+
+void BWP_Network(Network *n, double out);
+
+void print_Network(Network *n);
 #endif

@@ -5,8 +5,14 @@
 
 int main(int argc, char *argv[])
 {
-    Network *net;
-    size_t sizes[] = {2, 1};
-    Net_init(net, (size_t)2, sizes);
+    Network net;
+    init_Network(&net, 3);
+    input_Network(&net, 1.0, 0);
+    input_Network(&net, 0.75, 1);
+    print_Network(&net);
+    feed_forward_Network(&net);
+    print_Network(&net);
+    printf("\n_____END_OF_EXECUTION_____\n");
+    exit(0);
     return 0;
 }

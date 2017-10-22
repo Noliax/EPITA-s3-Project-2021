@@ -12,6 +12,10 @@ int main(int argc, char *argv[])
     print_Network(&net);
     feed_forward_Network(&net);
     print_Network(&net);
+    BWP_Network(&net, 1.0);
+    print_Network(&net);
+    weights_update_Network(&net, 0.1);
+    print_Network(&net);
     printf("\n_____END_OF_EXECUTION_____\n");
     exit(0);
     return 0;

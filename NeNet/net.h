@@ -24,10 +24,6 @@ typedef struct _Network{
 
 double sigma(double x);
 
-double *doubleArray(size_t sx, double val);
-
-double *Array_random(size_t sx);
-
 //Neuron
 
 void init_Neuron(Neuron *n, size_t nb_in);
@@ -46,9 +42,13 @@ void print_Layer(Layer *l);
 
 void init_Network(Network *net, size_t nb_layer);
 
+void input_Network(Network *n, double in, size_t id);
+
 void feed_forward_Network(Network *net);
 
 void BWP_Network(Network *n, double out);
 
 void print_Network(Network *n);
+
+void weights_update_Network(Network *net, double rate);
 #endif

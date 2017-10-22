@@ -2,17 +2,10 @@
 #include "./utils.h"
 #include "./segmentation.h"
 
-void RLSA(SDL_Surface *img, int hsv, int vsv, int ahsv)
+void RLSA(SDL_Surface *img, SDL_Surface *copy, int hsv, int vsv, int ahsv)
 {
-  SDL_Surface *copy = newWhiteSurface(img);
-
-  img = display_image(img);
-
-  // Set image colors to white or black
-  BinarizeColors(img);
-
-  // Save the white/black image to copy
-  SDL_BlitSurface(img, NULL, copy, NULL);
+  SDL_Surface *drawSurf = newWhiteSurface(copy);
+  SDL_BlitSurface(copy, NULL, drawSurf, NULL);
 
   // Perfom RLSA
   SDL_Surface *horizontal = HorizontalSmoothing(copy, hsv);
@@ -25,15 +18,14 @@ void RLSA(SDL_Surface *img, int hsv, int vsv, int ahsv)
   WaitKeyToUpdate(img);
 
   // Show blocks
-  Scan_Surface(img, copy);
-  SDL_BlitSurface(copy, NULL, img, NULL);
+  Scan_Surface(img, drawSurf);
+  SDL_BlitSurface(drawSurf, NULL, img, NULL);
   WaitKeyToUpdate(img);
 
   // Free surfaces
   SDL_FreeSurface(vertical);
-  SDL_FreeSurface(copy);
   SDL_FreeSurface(horizontal);
- 
+  SDL_FreeSurface(drawSurf);
 }
 
 int main()
@@ -50,10 +42,19 @@ int main()
   // ahsv *= 2;
 
   SDL_Surface *img = load_image("texte.png");
+  SDL_Surface *copy = newWhiteSurface(img);
 
-  RLSA(img, hsv*2, vsv, ahsv*3);
-  RLSA(img, hsv, vsv, ahsv);
-  RLSA(img, hsv, vsv, 2);
+  img = display_image(img);
+
+  // Set image colors to white or black
+  BinarizeColors(img);
+  WaitKeyToUpdate(img);
+
+  SDL_BlitSurface(img, NULL, copy, NULL);
+ 
+  RLSA(img, copy, hsv*2, vsv, ahsv*3);
+  RLSA(img, copy, hsv, vsv, ahsv);
+  RLSA(img, copy, hsv, vsv, 2);
 
   SDL_FreeSurface(img);
  return 0;

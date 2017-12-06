@@ -6,18 +6,18 @@ CFLAGS = -Wall -Wextra -std=c99 -O0 -g
 LDFLAGS =
 LDLIBS = -lm
 
-SRC = net.c net_test.c
+SRC = net.c 
 OBJ = ${SRC:.c=.o}
 DEP = ${SRC:.c=.d}
  
-all: net_test
+all: net
  
-net_test: ${OBJ}
+net: ${OBJ}
  
 .PHONY: clean
  
 clean:
-	${RM} ${OBJ} ${DEP} net_test
+	${RM} ${OBJ} ${DEP} net
  
 -include ${DEP}
  

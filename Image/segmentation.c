@@ -157,7 +157,7 @@ void Scan_Surface(SDL_Surface *blocks, SDL_Surface *source)
           }
 
           // Allow one pixel to separate blocks
-          if (blacks_found_col < 1)
+          if (blacks_found_col < 2)
           {
             /*There is probably a block between i, last_white_col, j and last_white_line
 

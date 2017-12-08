@@ -1,6 +1,6 @@
 ## Simple SDL mini code
 
-CC=gcc
+CC=gcc -fsanitize=address
 
 CPPFLAGS= `pkg-config --cflags gtk+-3.0` `sdl-config --cflags` -MMD
 CFLAGS= -Wall -Wextra -std=c11 -O0 -g

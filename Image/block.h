@@ -20,8 +20,6 @@ struct Block
     //int mean_horizontal_length;
 };
 
-struct Block *Block_new(int x, int y, int width, int height);
-
 struct BlockList
 {
   struct Block *curr;
@@ -30,12 +28,22 @@ struct BlockList
 };
 
 
-void BlockList_init(struct BlockList *list);
+
+// Block
+struct Block *Block_new(int x, int y, int width, int height);
+int* ProcessBlock(GdkPixbuf *source, struct Block *block);
+int **BlocksToMat(GdkPixbuf *final, struct BlockList *blocks);
+void DisplayBlockRGB(GdkPixbuf *buffer, struct Block *block, int r, int g, int b);
+void DisplayBlock(GdkPixbuf *buffer, struct Block *block);
+void CropWhite(GdkPixbuf *source, struct Block *block);
+
+
+// Block List
+struct BlockList *BlockList_new();
 int BlockList_isempty(struct BlockList *list);
 void BlockList_push(struct BlockList *list, struct Block *elm);
 struct Block *BlockList_pop(struct BlockList *list);
 void BlockList_destroy(struct BlockList *list);
-int* ProcessBlock(GdkPixbuf *source, struct Block *block);
-int **BlocksToMat(GdkPixbuf *final, struct BlockList *blocks);
 
+void print_mat(int* mat);
 #endif

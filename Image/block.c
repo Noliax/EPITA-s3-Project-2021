@@ -17,6 +17,7 @@ void BlockList_init(struct BlockList *list)
 {
   list->next = NULL;
   list->curr = NULL; 
+  list->size = 0;
 }
 
 int BlockList_isempty(struct BlockList *list)
@@ -31,6 +32,7 @@ void BlockList_push(struct BlockList *list, struct Block *elm)
   new->curr = elm;
   new->next = tmp;
   list->next = new;
+  list->size += 1;
 }
 
 struct Block *BlockList_pop(struct BlockList *list)
@@ -42,6 +44,7 @@ struct Block *BlockList_pop(struct BlockList *list)
   list->next = elm->next;
   struct Block *ret = elm->curr;
   free(elm);
+  list->size -= 1;
   return ret; 
 }
 
@@ -101,4 +104,20 @@ int* ProcessBlock(GdkPixbuf *source, struct Block *block)
   }
   
   return mat;
+}
+
+int **BlocksToMat(GdkPixbuf *final, struct BlockList *blocks)
+{
+  size_t count = blocks->size;
+  int **block_matrices = malloc(count * sizeof(int*));
+  int **tmp = block_matrices;
+
+  while(!BlockList_isempty(blocks))
+  {
+    struct Block *block = BlockList_pop(blocks);
+    *(tmp++) = ProcessBlock(final, block);
+    free(block);
+  }
+
+  return block_matrices;
 }

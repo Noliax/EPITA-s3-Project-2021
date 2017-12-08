@@ -26,6 +26,7 @@ struct BlockList
 {
   struct Block *curr;
   struct BlockList *next;
+  size_t size;
 };
 
 
@@ -35,5 +36,6 @@ void BlockList_push(struct BlockList *list, struct Block *elm);
 struct Block *BlockList_pop(struct BlockList *list);
 void BlockList_destroy(struct BlockList *list);
 int* ProcessBlock(GdkPixbuf *source, struct Block *block);
+int **BlocksToMat(GdkPixbuf *final, struct BlockList *blocks);
 
 #endif

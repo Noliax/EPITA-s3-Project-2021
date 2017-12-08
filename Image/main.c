@@ -64,17 +64,12 @@ void activate (GtkApplication* app, __attribute__ ((unused)) gpointer user_data)
   struct BlockList *blocks = malloc(sizeof(struct BlockList));
   BlockList_init(blocks);
   GdkPixbuf *withBlocks = Scan_Surface(final, buffer, blocks);
+  size_t count = blocks->size;
+  int **mat = BlocksToMat(final, blocks);
 
-  size_t count = 0;
-  while(!BlockList_isempty(blocks))
+  for(size_t i = 0; i < count; i++)
   {
-    struct Block *block = BlockList_pop(blocks);
-    printf("Block (%i, %i)\n", block->min_x, block->min_y);
-    int *block_mat = ProcessBlock(final, block);
-    print_mat(block_mat);
-    free(block_mat);
-    free(block);
-    count++;
+    print_mat(mat[i]);
   }
   printf("%zu blocks !\n", count);
 

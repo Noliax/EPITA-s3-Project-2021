@@ -78,7 +78,6 @@ int* ProcessBlock(GdkPixbuf *source, struct Block *block)
     else
       new_height =  new_width * block->height / block->width;
   }
-  printf("Resizing block to %ix%i\n", new_width, new_height);
   GdkPixbuf* resized = gdk_pixbuf_scale_simple(blockBuf, new_width, new_height, GDK_INTERP_BILINEAR);
 
   const guchar *pixels = gdk_pixbuf_read_pixels(resized);

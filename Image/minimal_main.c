@@ -14,33 +14,18 @@ void print_mat(int* mat)
     }
     printf("%i\n", mat[31 + 32*j]);
   }
+  printf("\n");
 }
 
-static
-void activate (GtkApplication* app, __attribute__ ((unused)) gpointer user_data)
+int main(int argc, char **argv)
 {
-  //---------------------------------------------------------------------------
-  //Create a window with an image
-
-  GtkWidget *window;
-  GtkWidget *scroll;
-  GtkWidget *img;
-  char *path = "texte.png";
-
-  window = gtk_application_window_new (app);
-  gtk_window_set_title (GTK_WINDOW (window), "OCR Segmentation");
-  gtk_window_set_default_size (GTK_WINDOW (window), 1400, 700);
-
-  scroll = gtk_scrolled_window_new(NULL, NULL);
-  gtk_container_add(GTK_CONTAINER(window), scroll);
-
-  img = gtk_image_new_from_file(path);
-  gtk_container_add(GTK_CONTAINER(scroll), img);
-  
-  gtk_widget_show_all(window);
+  gtk_init(&argc, &argv);
 
   //---------------------------------------------------------------------------
   //SEGMENTATION
+
+  char *path = "texte.png";
+  GtkWidget *img = gtk_image_new_from_file(path);
 
   // value for words
   int hsv = 8;
@@ -53,49 +38,35 @@ void activate (GtkApplication* app, __attribute__ ((unused)) gpointer user_data)
 
   GdkPixbuf *buffer = gtk_image_get_pixbuf(GTK_IMAGE(img));
 
-  // RLSA
+  // RLSA algorithm to detect blocks
   BinarizeColors(buffer);
   GdkPixbuf *horizontal = HorizontalSmoothing(buffer, hsv);
   GdkPixbuf *vertical = VerticalSmoothing(buffer, vsv);
   GdkPixbuf *both = MergeSmoothings(horizontal, vertical);
   GdkPixbuf *final = HorizontalSmoothing(both, ahsv);
   
-  // Blocks detection
+  // Blocks detection to int mat
   struct BlockList *blocks = malloc(sizeof(struct BlockList));
   BlockList_init(blocks);
   GdkPixbuf *withBlocks = Scan_Surface(final, buffer, blocks);
   size_t count = blocks->size;
   int **mat = BlocksToMat(final, blocks);
 
+  // Prints for debug
   for(size_t i = 0; i < count; i++)
   {
     print_mat(mat[i]);
   }
   printf("%zu blocks !\n", count);
 
+  // Clean
+  // TODO: free int **mat
   BlockList_destroy(blocks);
-
   g_object_unref(horizontal);
   g_object_unref(vertical);
   g_object_unref(both);
   g_object_unref(final);
-
-  // Display result
-  gtk_image_clear(GTK_IMAGE(img));
-  gtk_image_set_from_pixbuf(GTK_IMAGE(img), withBlocks);
-
   g_object_unref(withBlocks);
-}
-
-int main(int argc, char **argv)
-{
-  GtkApplication *app;
-  int status;
-
-  app = gtk_application_new("test.ocr.image", G_APPLICATION_FLAGS_NONE);
-  g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
-  status = g_application_run(G_APPLICATION(app), argc, argv);
-  g_object_unref(app);
-
-  return status;
+  
+  return 0;
 }

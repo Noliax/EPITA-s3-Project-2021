@@ -2,12 +2,12 @@
 
 CC=gcc
 
-CPPFLAGS= `pkg-config --cflags sdl` -MMD
-CFLAGS= -Wall -Wextra -Werror -std=c11 -O3
+CPPFLAGS= `pkg-config --cflags gtk+-3.0` `sdl-config --cflags` -MMD
+CFLAGS= -Wall -Wextra -std=c11 -O0 -g
 LDFLAGS=
-LDLIBS= `pkg-config --libs sdl` -lSDL_image
+LDLIBS= `sdl-config --libs` `pkg-config --libs gtk+-3.0` -lSDL_image
 
-OBJ= main.o segmentation.o utils.o block.o pixel_operations.o
+OBJ= main.o segmentation.o block.o
 DEP= ${SRC:.o=.d}
 
 all: main

@@ -29,9 +29,9 @@ void print_mat(int *mat) {
   } else {
     for (int j = 0; j < 32; j++) {
       for (int i = 0; i < 31; i++) {
-        printf("%i ", mat[i + 32 * j]);
+        printf("%02i ", mat[i + 32 * j]);
       }
-      printf("%i\n", mat[31 + 32 * j]);
+      printf("%02i\n", mat[31 + 32 * j]);
     }
   }
 }
@@ -124,12 +124,12 @@ int *ProcessBlock(GdkPixbuf *source, struct Block *block) {
 
   for (int i = 0; i < 32; i++) {
     for (int j = 0; j < 32; j++) {
+      mat[i + 32 * j] = -1;
+
       if (i < new_width && j < new_height) {
         guchar p = *(pixels + j * rowstride + i * n_channels);
         if (p == 0)
           mat[i + 32 * j] = 1;
-      } else {
-        mat[i + 32 * j] = 0;
       }
     }
   }

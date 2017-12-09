@@ -22,9 +22,8 @@ struct Block
 
 struct BlockList
 {
-  struct Block *curr;
-  struct BlockList *next;
-  size_t size;
+  size_t capacity, size;
+  struct Block **data;
 };
 
 
@@ -39,10 +38,8 @@ void CropWhite(GdkPixbuf *source, struct Block *block);
 
 
 // Block List
-struct BlockList *BlockList_new();
-int BlockList_isempty(struct BlockList *list);
-void BlockList_push(struct BlockList *list, struct Block *elm);
-struct Block *BlockList_pop(struct BlockList *list);
+struct BlockList *BlockList_new(size_t capacity);
+int BlockList_push(struct BlockList *list, struct Block *elm);
 void BlockList_destroy(struct BlockList *list);
 
 void print_mat(int* mat);

@@ -22,17 +22,22 @@ int main(int argc, char **argv) {
 
   // Blocks detection to int mat
   struct BlockList *blocks = RLSA(buffer, hsv, vsv, ahsv);
-  size_t count = blocks->size;
   int **mat = BlocksToMat(buffer, blocks);
 
   // Prints for debug
   for (size_t i = 0; i < 3; i++) {
     print_mat(mat[i]);
   }
-  printf("%zu blocks !\n", count);
+  printf("%zu blocks !\n", blocks->size);
 
   // Clean
-  // TODO: free int **mat
+  for(size_t i = 0; i < 32; i++)
+  {
+    int *m = mat[i];
+    if(m != 0 && m != 1)
+      free(m);
+  }
+  free(mat);
   BlockList_destroy(blocks);
   return 0;
 }

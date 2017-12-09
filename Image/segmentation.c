@@ -135,7 +135,7 @@ static void SearchHorizontalBlocks(GdkPixbuf *source, struct BlockList *list,
   int height = line2 - line1 + 1;
   int last_white_col = -1;
 
-  for (int i = col2; i > col1; i--) {
+  for (int i = col1; i <= col2; i++) {
     // Search white column
     int nb_black = 0;
     for (int y = line1 + 1; y < line2; y++) {
@@ -146,9 +146,9 @@ static void SearchHorizontalBlocks(GdkPixbuf *source, struct BlockList *list,
 
     if (nb_black == 0) {
       // we found two differents white columns
-      if (last_white_col > 0 && last_white_col - i > 1) {
+      if (last_white_col > 0 && i - last_white_col > 1) {
         struct Block *block =
-            Block_new(i-1, line1, last_white_col - i + 1, height);
+            Block_new(last_white_col, line1, i - last_white_col + 1, height);
 
         CropWhite(source, block);
         BlockList_push(list, block);
@@ -159,7 +159,7 @@ static void SearchHorizontalBlocks(GdkPixbuf *source, struct BlockList *list,
 }
 
 static struct BlockList *SearchLines(GdkPixbuf *source) {
-  struct BlockList *list = BlockList_new();
+  struct BlockList *list = BlockList_new(100);
 
   int width = gdk_pixbuf_get_width(source);
   int height = gdk_pixbuf_get_height(source);
@@ -207,10 +207,10 @@ struct BlockList *RLSA(GdkPixbuf *buffer, int hsv, int vsv, int ahsv) {
   final = HorizontalSmoothing(both, ahsv * 4);
 
   // Push all words then push 0 to mark the end of line
-  struct BlockList *words = BlockList_new();
-  while (!BlockList_isempty(lines)) {
-    struct Block *line = BlockList_pop(lines);
-
+  struct BlockList *words = BlockList_new(100);
+  for(size_t i = 0; i < lines->size; i++)
+  {
+    struct Block *line = lines->data[i];
     int line1 = line->min_y;
     int line2 = line1 + line->height;
     int col1 = line->min_x;
@@ -218,8 +218,6 @@ struct BlockList *RLSA(GdkPixbuf *buffer, int hsv, int vsv, int ahsv) {
 
     SearchHorizontalBlocks(final, words, col1, col2, line1, line2);
     BlockList_push(words, (struct Block *)0);
-
-    free(line);
   }
 
   // CHARACTERS
@@ -229,9 +227,10 @@ struct BlockList *RLSA(GdkPixbuf *buffer, int hsv, int vsv, int ahsv) {
   final = HorizontalSmoothing(both, ahsv);
 
   // Push all chars then push 1 to mark the end of a word
-  struct BlockList *chars = BlockList_new();
-  while (!BlockList_isempty(words)) {
-    struct Block *word = BlockList_pop(words);
+  struct BlockList *chars = BlockList_new(100);
+  for(size_t i = 0; i < words->size; i++)
+  {
+    struct Block *word = words->data[i];
 
     // word can be an end of line !
     if (word != 0) {
@@ -243,8 +242,6 @@ struct BlockList *RLSA(GdkPixbuf *buffer, int hsv, int vsv, int ahsv) {
       SearchHorizontalBlocks(final, chars, col1, col2, line1, line2);
       BlockList_push(chars, (struct Block *)1);
     }
-
-    free(word);
   }
 
   // CLEAN THIS MESS

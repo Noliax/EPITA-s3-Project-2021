@@ -35,34 +35,26 @@ static void activate(GtkApplication *app,
 
   GdkPixbuf *buffer = gtk_image_get_pixbuf(GTK_IMAGE(img));
   struct BlockList *blocks = RLSA(buffer, hsv, vsv, ahsv);
-  size_t blocks_len = blocks->size;
 
   // Display for the show
-  struct BlockList *cursor = blocks;
-  if (!BlockList_isempty(cursor)) {
-    int i = 4;
-    while (i > 0) {
-      while (cursor->next != NULL &&
-             (cursor->next->curr == 0 || cursor->next->curr == 1))
-        cursor = cursor->next;
-      if (cursor->next != NULL)
-        DisplayBlock(buffer, cursor->next->curr);
-      i--;
-      cursor = cursor->next;
-    }
+  for(size_t i = 0; i < 5 && i < blocks->size; i++)
+  {
+    DisplayBlock(buffer, blocks->data[i]); 
   }
+  printf("%zu characters !", blocks->size);
 
   int** matrices = BlocksToMat(buffer, blocks);
-
-  for(size_t i = 0; i < blocks_len/2; i++)
-  {
-    int *tmp = matrices[i];
-    matrices[i] = matrices[blocks_len-i-1];
-    matrices[blocks_len-i-1] = tmp;
-  }
   
-  for(size_t i = 0; i < 5 && i < blocks_len; i++)
+  for(size_t i = 0; i < 5 && i < blocks->size; i++)
     print_mat(matrices[i]);
+
+  for(size_t i = 0; i < 32; i++)
+  {
+    int *mat = matrices[i];
+    if(mat != 0 && mat != 1)
+      free(mat);
+  }
+  free(matrices);
 
   BlockList_destroy(blocks);
 }

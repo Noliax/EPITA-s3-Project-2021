@@ -45,54 +45,47 @@ struct Block *Block_new(int x, int y, int width, int height) {
   return b;
 }
 
-struct BlockList *BlockList_new()
+// returns false if something goes wrong (realloc fails)
+static int double_size(struct BlockList *list)
+{
+  struct Block *tmp = realloc(list->data, 2 * list->capacity * sizeof (struct Block*));
+  list->data = tmp;
+  list->capacity *= 2;
+  return 1;
+}
+
+
+struct BlockList *BlockList_new(size_t capacity)
 {
   struct BlockList *list = malloc(sizeof(struct BlockList));
-  list->next = NULL;
-  list->curr = NULL; 
   list->size = 0;
+  list->capacity = capacity;
+  list->data = malloc(capacity * sizeof(struct Block*));
   return list;
 }
 
-int BlockList_isempty(struct BlockList *list)
+int BlockList_push(struct BlockList *list, struct Block *elm)
 {
-  return list->next == NULL;
-}
-
-void BlockList_push(struct BlockList *list, struct Block *elm)
-{
-  struct BlockList *tmp = list->next;
-  struct BlockList *new = malloc(sizeof(struct BlockList));
-  new->curr = elm;
-  new->next = tmp;
-  list->next = new;
-  list->size += 1;
-}
-
-struct Block *BlockList_pop(struct BlockList *list)
-{
-  if(BlockList_isempty(list))
-    return NULL;
-
-  struct BlockList *elm = list->next;
-  list->next = elm->next;
-  struct Block *ret = elm->curr;
-  free(elm);
-  list->size -= 1;
-  return ret; 
+  if(list->size < list->capacity ||
+    (list->size == list->capacity && double_size(list)))
+  {
+    struct Block **end = list->data + list->size;
+    *end = elm;
+    list->size++;
+    return 1;
+  }
+  return 0;
 }
 
 void BlockList_destroy(struct BlockList *list) {
-  if (!list)
-    return;
-
-  while (list != NULL) {
-    struct BlockList *tmp = list;
-    list = list->next;
-    if (tmp->curr != 0 && tmp->curr != 1)
-      free(tmp->curr);
-    free(tmp);
+  for(size_t i = 0; i < list->size; i++)
+  {
+    struct Block *block = list->data[i];
+    if(block != 0 && block != 1)
+      free(block);
   }
+  free(list->data);
+  free(list);
 }
 
 int *ProcessBlock(GdkPixbuf *source, struct Block *block) {
@@ -141,16 +134,18 @@ int **BlocksToMat(GdkPixbuf *source, struct BlockList *blocks) {
   int **block_matrices = malloc(blocks->size* sizeof(int *));
 
   size_t i = 0;
-  while (!BlockList_isempty(blocks)) {
-    block_matrices[i] = ProcessBlock(source, blocks->next->curr);
-    i++;
-    blocks = blocks->next;
+  for(size_t i = 0; i < blocks->size; i++)
+  {
+    block_matrices[i] = ProcessBlock(source, blocks->data[i]);
   }
 
   return block_matrices;
 }
 
 void DisplayBlockRGB(GdkPixbuf *buffer, struct Block *block, int r, int g, int b) {
+  if(block == 0 || block == 1)
+    return;
+
   int end_x = block->min_x + block->width;
   int end_y = block->min_y + block->height;
   guchar *p1, *p2;

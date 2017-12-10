@@ -1,24 +1,24 @@
-# Makefile
- 
-CC = gcc -fsanitize=address
-CPPFLAGS = -MMD
-CFLAGS = -Wall -Wextra -std=c99 -O0 -g
-LDFLAGS =
-LDLIBS = -lm
+## Simple SDL mini code
 
-SRC = net.c 
-OBJ = ${SRC:.c=.o}
-DEP = ${SRC:.c=.d}
- 
-all: net
- 
-net: ${OBJ}
- 
-.PHONY: clean
- 
+CC=gcc -fsanitize=address
+
+CPPFLAGS= `pkg-config --cflags gtk+-3.0` `sdl-config --cflags` -MMD
+CFLAGS= -Wall -Wextra -std=c11 -O0 -g
+LDFLAGS=
+LDLIBS= -lm `sdl-config --libs` `pkg-config --libs gtk+-3.0` -lSDL_image
+
+OBJ= main.o ../Image/segmentation.o ../Image/block.o net.o
+
+DEP= ${SRC:.o=.d}
+
+all: main
+
+main: ${OBJ}
+
 clean:
-	${RM} ${OBJ} ${DEP} net
- 
+	${RM} ${OBJ} ${DEP} *~
+	${RM} main
+
 -include ${DEP}
- 
+
 # END

@@ -49,7 +49,7 @@ void add(double *res, double *mat, size_t size)
     }
 }
 
-size_t read(double *img, double **net, size_t net_size)
+size_t Net_read(double *img, double **net, size_t net_size)
 {
     double min = dif(net[0], img, net_size);
     double diff;
@@ -107,7 +107,7 @@ size_t encode(char c)
     if(c == '!') return 70;
     return 0;
 }
-void learn(double *img, double **net, char res)
+void Net_learn(double *img, double **net, char res)
 {
     size_t letter = encode(res);
     add(net[letter], img, 26+26+10+7);
@@ -160,7 +160,3 @@ void open(double **net, size_t size)
     }
 }
 
-int main()
-{
-    return 0;
-}

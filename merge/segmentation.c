@@ -242,6 +242,9 @@ struct BlockList *RLSA(GdkPixbuf *buffer, int hsv, int vsv, int ahsv) {
       SearchHorizontalBlocks(final, chars, col1, col2, line1, line2);
       BlockList_push(chars, (struct Block *)1);
     }
+    else {
+      BlockList_push(chars, (struct Block*)0);
+    }
   }
 
   // CLEAN THIS MESS

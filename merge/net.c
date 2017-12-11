@@ -22,7 +22,7 @@ double *Net_newMat(size_t size)
     size--;
     for(;size != 0; --size)
         res[size] = 0;
-    res[0] = 0;
+    res[0] = -1;
     return res; 
 }
 
@@ -35,28 +35,24 @@ double Net_dif(double *m1, double *m2, size_t size)
 {
     double sum = 0;
     for(size_t i = 0; i < size; i++)
-    {
         sum += Net_abs_(Net_sigma(m1[i]) - Net_sigma(m2[i]));
-    }
     return sum;
 }
 
 void Net_add(double *letter, double *image, size_t size)
 {
     for(size_t i = 0; i < size; i++)
-    {
         letter[i] += image[i];
-    }
 }
 
 char Net_read(double *img, double **net, size_t net_size)
 {
-    double min = Net_dif(net[0], img, net_size);
+    double min = Net_abs_(Net_dif(net[0], img, net_size));
     double diff;
     size_t id = 0;
     for(size_t out = 0; out < net_size; out++)
     {
-        diff = Net_dif(net[out], img, net_size);
+        diff = Net_abs_(Net_dif(net[out], img, net_size));
         if(diff < min)
         {
             min = diff;
@@ -106,7 +102,7 @@ void Net_learn(double *img, double **net, char res)
     Net_add(net[letter], img, 26+26+10+7);
 }
 
-
+//-----------
 void Net_save(double **net, size_t size)
 {
     FILE *f;

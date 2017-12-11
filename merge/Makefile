@@ -16,8 +16,9 @@ all: main
 main: ${OBJ}
 
 clean:
-	${RM} ${OBJ} ${DEP} *~
-	${RM} main
+		${RM} ${OBJ} ${DEP}
+		${RM} main
+		${RM} *.d *.o
 
 -include ${DEP}
 

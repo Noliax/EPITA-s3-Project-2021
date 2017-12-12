@@ -85,7 +85,7 @@ G_MODULE_EXPORT void on_Charger_selection_changed() {
     {
         network[i] = Net_newMat(1024);
     }
-  Net_open(network, mat_size, "../netmap");
+  Net_open(network, out_size, "../netmap");
    
   char *result = malloc(mat_size * sizeof(char) + sizeof(char));
   result[mat_size] = '\0';

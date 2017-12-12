@@ -27,10 +27,8 @@ size_t Net_encode(char c);
 
 void Net_learn(double *img, double **net, char res);
 
-void Net_save(double **net, size_t size);
+void Net_save(double **net, size_t size, char *path);
 
-double Net_charTabToDouble(char *tab);
-
-void Net_open(double **net, size_t size);
+void Net_open(double **net, size_t size, char *path);
 
 #endif

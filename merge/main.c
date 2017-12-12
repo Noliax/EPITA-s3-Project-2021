@@ -58,7 +58,7 @@ void learn(double **network, GdkPixbuf *buffer, char *text)
 int main(int argc, char **argv)
 {
     gtk_init(&argc, &argv);
-    int teach = 0;
+    int teach = 1;
     // Create neural networkd
     size_t out_size = 26 + 26 + 10 + 7;
     double **network = malloc(out_size * sizeof(double*));
@@ -66,8 +66,11 @@ int main(int argc, char **argv)
     {
         network[i] = Net_newMat(1024);
     }
-    printf("Loading network from file...\n");
-    Net_open(network, out_size, "netmap");
+    if(!teach)
+    {
+      printf("Loading network from file...\n");
+      Net_open(network, out_size, "../netmap");
+    }
     printf("Done !\n");
     
     printf("Loading images...\n");
@@ -166,32 +169,9 @@ int main(int argc, char **argv)
         learn(network, buffer2, text2);
         learn(network, alph_buffer, text3);
         printf("Saving experience...\n");
-        Net_save(network, out_size, "netmap");
+        Net_save(network, out_size, "../netmap");
         printf("Done !\n");
     }
-    // OCR
-    struct BlockList *blocks = RLSA(buffer, 8, 32, 2);
-    int **mat = BlocksToMat(buffer, blocks);
-    size_t mat_size = blocks->size;
-    double **doubleMat = IntToDoubleMat(mat, mat_size);
-
-    char *result = malloc(mat_size * sizeof(char) + sizeof(char));
-    result[mat_size] = '\0';
-
-    for(size_t i = 0; i < mat_size; ++i)
-    {
-        if(doubleMat[i] == (void*)1)
-            result[i] = ' ';
-        else 
-        if(doubleMat[i] == (void*)0)
-            result[i] = '\n';
-        else
-        {
-            result[i] = Net_read(doubleMat[i], network, out_size);
-        }
-    }
-    printf("\n%s\n",result);
-    
     exit(0);
     return 0;
 }

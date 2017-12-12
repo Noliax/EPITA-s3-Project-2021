@@ -15,7 +15,7 @@ void printDoubleMat(double *mat)
 int main(int argc, char **argv)
 {
     gtk_init(&argc, &argv);
-    char *path = "texteclean.png";
+    char *path = "texte1.png";
 
     size_t in_size = 32;
     size_t out_size = 26 + 26 + 10 + 7;
@@ -50,16 +50,17 @@ int main(int argc, char **argv)
         }
     }
     
-    char *text = "1 Au commencement, Dieu crea le ciel et la terre. \n"
-      "2 La terre n' etait que chaos et vide. Il y avait des tenebres a la surface de l'abime et l'Esprit \n"
+    char *text = 
+      "1 Au commencement, Dieu crea le ciel et la terre. \n"
+      "2 La terre n' etait que chaos et vide. Il y avait des tenebres a la surface de l' abime et l'Esprit \n"
       "de Dieu planait au-dessus de l' eau. \n"
       "3 Dieu dit : \" Qu'il y ait de la lumiere ! \" et il y eut de la lumiere. \n"
       "4 Dieu vit que la lumiere etait bonne, et il separa la lumiere des tenebres. \n"
       "5 Dieu appela la lumiere jour , et les tenebres nuit. Il y eut un soir et il y eut un matin. Ce fut \n"
       "le premier jour . \n"
       "6 Dieu dit : \" Qu'il y ait une etendue entre les eaux pour les separer les unes des autres ! \" \n"
-      "7 Dieu fit l' etendue et separa ainsi l' eau qui est au-dessous de l' etendue de celle qui est au- \n"
-      "dessus. Cela se passa ainsi. \n"
+      "7 Dieu fit l' etendue et separa ainsi l' eau qui est au-dessous de l' etendue de celle qui est \n"
+      "audessus. Cela se passa ainsi. \n"
       "8 Dieu appela l' etendue ciel. Il y eut un soir et il y eut un matin. Ce fut le deuxieme jour . \n"
       "9 Dieu dit : \" Que les eaux qui sont au-dessous du ciel se rassemblent a un seul endroit et \n"
       "que le sec apparaisse ! \" Et cela se passa ainsi. \n"
@@ -80,8 +81,16 @@ int main(int argc, char **argv)
       "18 pour dominer sur le jour et la nuit et pour separer la lumiere des tenebres. Dieu vit que \n"
       "c' etait bon. \n"
       "19 Il y eut un soir et il y eut un matin. Ce fut le quatrieme jour . \n"
-      "20 Dieu dit : \" Que l' eau pullule d'animaux vivants et que des oiseaux volent dans le ciel au- \n"
-      "dessus de la terre ! \" \n";
+      "20 Dieu dit : \" Que l' eau pullule d' animaux vivants et que des oiseaux volent dans le ciel \n"
+      "audessus de la terre ! \" \n";
+
+    /*
+    for(size_t i = 0;  i < mat_size; i++)
+    {
+      printf(" New : %c %zu\n", text[i], i);
+      print_mat(mat[i]);
+    }
+    */
 
     for(size_t i = 0; i < mat_size; i++)
     {

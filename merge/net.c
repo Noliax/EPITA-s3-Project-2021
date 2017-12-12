@@ -49,7 +49,7 @@ void Net_add(double *letter, double *image, size_t size)
         letter[i] = y;
     }
 }
-
+/*
 char Net_read(double *img, double **net, size_t net_size)
 {
     double min = (Net_dif(net[0], img, net_size));
@@ -65,6 +65,28 @@ char Net_read(double *img, double **net, size_t net_size)
         }
     }
     return Net_decode(id);
+}
+*/
+
+char Net_read(double *img, double **net, size_t net_size)
+{
+    double diff, best;
+    size_t bestID = 0;
+    best = 10000;    
+    for(size_t letter = 0; letter < net_size; letter++)
+    {
+        diff = 0;
+        for(size_t i = 0; i < 1024; i++)
+        {
+            diff += Net_abs_(img[i] - net[letter][i]);
+        }
+        if(diff < best)
+        {
+            best = diff;
+            bestID = letter;
+        }
+    }
+    return Net_decode(bestID);
 }
 
 void Net_learn(double *img, double **net, char res)

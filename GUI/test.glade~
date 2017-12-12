@@ -51,7 +51,6 @@
                 <property name="margin_left">5</property>
                 <property name="margin_right">5</property>
                 <property name="margin_top">10</property>
-                <signal name="clicked" handler="on_BoutonContour_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -184,17 +183,6 @@
             <property name="can_focus">False</property>
             <property name="homogeneous">True</property>
             <child>
-              <object class="GtkScrolledWindow">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="min_content_width">4</property>
-                <property name="min_content_height">31</property>
-                <property name="max_content_width">260</property>
-                <property name="max_content_height">130</property>
-                <property name="propagate_natural_width">True</property>
-                <property name="propagate_natural_height">True</property>
-                <child>
-
               <object class="GtkImage" id="Image2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>

@@ -44,10 +44,7 @@ static GtkTextIter iter;
 static GtkTextBuffer *bufferpopup;
 static GtkImage *image;
 static GdkPixbuf *buf;
-static GtkWidget *BoutonLeft;
-static GtkWidget *BoutonRight;
-static GtkWidget *BoutonTranslate;
-static GtkWidget *BoutonSave;
+static char *result;
 
 G_MODULE_EXPORT void on_MainWindow_destroy() { gtk_main_quit(); }
 
@@ -56,10 +53,6 @@ G_MODULE_EXPORT void on_BoutonQuit_clicked() { gtk_main_quit(); }
 G_MODULE_EXPORT void Charger_selection_changed_cb() {}
 
 G_MODULE_EXPORT void on_Charger_selection_changed() {
-  gtk_widget_set_sensitive(BoutonLeft, TRUE);
-  gtk_widget_set_sensitive(BoutonRight, TRUE);
-  gtk_widget_set_sensitive(BoutonTranslate, TRUE);
-  gtk_widget_set_sensitive(BoutonSave, FALSE);
   resultat = "Final Text";
   gtk_text_buffer_set_text(buffer, resultat, -1);
   GtkFileChooser *file =
@@ -87,7 +80,7 @@ G_MODULE_EXPORT void on_Charger_selection_changed() {
     }
   Net_open(network, out_size, "../netmap");
    
-  char *result = malloc(mat_size * sizeof(char) + sizeof(char));
+  result = malloc(mat_size * sizeof(char) + sizeof(char));
   result[mat_size] = '\0';
 
   for (size_t i = 0; i < mat_size; ++i) {
@@ -119,7 +112,7 @@ G_MODULE_EXPORT void on_BoutonValide_clicked() {
   } else {
     FILE *fichier = NULL;
     fichier = fopen(nomFichier, "w");
-    fputs("Text", fichier);
+    fputs(result, fichier);
     fclose(fichier);
     gtk_widget_hide(fenetre_secondaire);
     gtk_widget_show(fenetre_principale);
@@ -127,7 +120,6 @@ G_MODULE_EXPORT void on_BoutonValide_clicked() {
 }
 
 G_MODULE_EXPORT void on_BoutonTranslate_clicked() {
-  gtk_widget_set_sensitive(BoutonSave, TRUE);
   // prendre la sortie de la fonction de thib
   resultat = "Text from the image\n";
   gtk_text_buffer_set_text(buffer, resultat, -1);
@@ -271,19 +263,6 @@ int main(int argc, char *argv[]) {
   gtk_text_buffer_get_iter_at_offset(bufferpopup, &iter, 0);
   gtk_text_buffer_insert(bufferpopup, &iter, resultat, -1);
   gtk_text_buffer_set_text(bufferpopup, "Enter a name file", -1);
-
-  BoutonLeft =
-      GTK_WIDGET(gtk_builder_get_object(data.builder, "BoutonTourner"));
-  BoutonRight =
-      GTK_WIDGET(gtk_builder_get_object(data.builder, "BoutonTourner2"));
-  BoutonTranslate =
-      GTK_WIDGET(gtk_builder_get_object(data.builder, "BoutonTranslate"));
-  BoutonSave = GTK_WIDGET(gtk_builder_get_object(data.builder, "BoutonSave"));
-
-  gtk_widget_set_sensitive(BoutonLeft, FALSE);
-  gtk_widget_set_sensitive(BoutonRight, FALSE);
-  gtk_widget_set_sensitive(BoutonTranslate, FALSE);
-  gtk_widget_set_sensitive(BoutonSave, FALSE);
 
   gtk_main();
   exit(0);

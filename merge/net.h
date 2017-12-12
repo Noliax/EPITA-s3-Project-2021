@@ -9,7 +9,7 @@
 
 double Net_sigma(double x);
 
-double Net_amgis(double x);
+double Net_amgis(double y);
 
 double *Net_newMat(size_t size);
 

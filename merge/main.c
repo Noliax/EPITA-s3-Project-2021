@@ -8,7 +8,7 @@
 void printDoubleMat(double *mat)
 {
     for(size_t i = 0; i < 1024; i++)
-        printf("%d%c", mat[i]==-1, i%32==0 ? '\n' : ' ');
+        printf("%.5f%c", mat[i], i%32==0 ? '\n' : ' ');
     printf("\n");
 }
 
@@ -24,7 +24,6 @@ int main(int argc, char **argv)
     for(size_t i = 0; i < out_size; i++)
     {
         network[i] = Net_newMat(in_size * in_size);
-//        printDoubleMat(network[i]);
     }
     
     GtkWidget *img = gtk_image_new_from_file(path);
@@ -38,7 +37,6 @@ int main(int argc, char **argv)
     size_t mat_size = blocks->size;
     double **doubleMat = malloc(mat_size * sizeof(double*));
     double *charmap;
-//    printf("\n%zu\n", mat_size);
     for(size_t i = 0; i < mat_size; i++)
     {
         if((size_t)(mat[i]) == 0 || (size_t)(mat[i]) == 1)
@@ -47,9 +45,8 @@ int main(int argc, char **argv)
         {
             charmap = Net_newMat(in_size * in_size);
             for(size_t j = 0; j < in_size * in_size; j++)
-                charmap[j] = (double)mat[i][j];
+                charmap[j] = (double)(mat[i][j]);
             doubleMat[i] = charmap;
-//            printDoubleMat(doubleMat[i]);
         }
     }
     
@@ -93,27 +90,27 @@ int main(int argc, char **argv)
         else
         {
             Net_learn(doubleMat[i], network, text[i]);
-            printf("\n< %c >--------\n", text[i]);
-            printDoubleMat(doubleMat[i]);
-//            printf("%c", Net_read(doubleMat[i], network, out_size));
         }
-
     }
+    printDoubleMat(network[Net_encode('m')]);
     printf("\n");
-    char *result = malloc(mat_size * sizeof(char));
+    char *result = malloc(mat_size * sizeof(char) + sizeof(char));
+    result[mat_size] = '\0';
     for(size_t i = 0; i < mat_size; ++i)
     {
         if(doubleMat[i] == (void*)1)
             result[i] = ' ';
-        else if(doubleMat[i] == (void*)0)
+        else 
+        if(doubleMat[i] == (void*)0)
             result[i] = '\n';
         else
         {
             result[i] = Net_read(doubleMat[i], network, out_size);
         }
-        printf("%c", result[i]);
     }
-    printf("\n");
+    printf("\n%s\n",result);
+    printf("sigma(1) = %f \namgis(%f) = %f\n", Net_sigma(1), Net_sigma(1),Net_amgis(-1));
+    //for(int i = 0; i < 26+26+10+7; i++) printDoubleMat(network[i]);
     exit(0);
     return 0;
 }

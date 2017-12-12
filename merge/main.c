@@ -48,8 +48,8 @@ void learn(double **network, GdkPixbuf *buffer, char *text)
     else
     {
       Net_learn(doubleMat[i], network, text[i%text_len]);
-      printf("%c %zu \n", text[i%text_len], i);
-      print_mat(mat[i]);
+      //printf("%c %zu \n", text[i%text_len], i);
+      //print_mat(mat[i]);
     }
   }
 
@@ -58,7 +58,7 @@ void learn(double **network, GdkPixbuf *buffer, char *text)
 int main(int argc, char **argv)
 {
     gtk_init(&argc, &argv);
-
+    int teach = 0;
     // Create neural networkd
     size_t out_size = 26 + 26 + 10 + 7;
     double **network = malloc(out_size * sizeof(double*));
@@ -66,7 +66,11 @@ int main(int argc, char **argv)
     {
         network[i] = Net_newMat(1024);
     }
+    printf("Loading network from file...\n");
+    Net_open(network, out_size);
+    printf("Done !\n");
     
+    printf("Loading images...\n");
     // Load image
     char *path = "texte1.png";
     GtkWidget *img = gtk_image_new_from_file(path);
@@ -81,7 +85,7 @@ int main(int argc, char **argv)
     GtkWidget *alph_img = gtk_image_new_from_file(alph_path);
     GdkPixbuf *alph_buffer = gtk_image_get_pixbuf(GTK_IMAGE(alph_img));
 
-
+    printf("Done !\n");
     char *text = 
       "1 Au commencement, Dieu crea le ciel et la terre. \n"
       "2 La terre n' etait que chaos et vide. Il y avait des tenebres a la surface de l' abime et l'Esprit \n"
@@ -156,12 +160,14 @@ int main(int argc, char **argv)
       "0 1 2 3 4 5 6 7 8 9 a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P \n"
       "Q R S T U V W X Y Z ? ! , ; . : \n"
       "- \n";
-
-
-    learn(network, buffer, text);
-    learn(network, buffer2, text2);
-    learn(network, alph_buffer, text3);
-
+    if(teach){
+        printf("Teaching...\n");
+        learn(network, buffer, text);
+        learn(network, buffer2, text2);
+        learn(network, alph_buffer, text3);
+        printf("Saving experience...\n");
+        printf("Done !\n");
+    }
     // OCR
     struct BlockList *blocks = RLSA(buffer, 8, 32, 2);
     int **mat = BlocksToMat(buffer, blocks);

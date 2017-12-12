@@ -67,7 +67,7 @@ int main(int argc, char **argv)
         network[i] = Net_newMat(1024);
     }
     printf("Loading network from file...\n");
-    Net_open(network, out_size);
+    Net_open(network, out_size, "netmap");
     printf("Done !\n");
     
     printf("Loading images...\n");
@@ -166,6 +166,7 @@ int main(int argc, char **argv)
         learn(network, buffer2, text2);
         learn(network, alph_buffer, text3);
         printf("Saving experience...\n");
+        Net_save(network, out_size, "netmap");
         printf("Done !\n");
     }
     // OCR

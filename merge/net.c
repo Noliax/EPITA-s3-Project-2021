@@ -103,10 +103,10 @@ size_t Net_encode(char c)
 
 //-----------
 
-void Net_save(double **net, size_t size)
+void Net_save(double **net, size_t size, char *path)
 {
     FILE *f;
-    f = fopen("netmap", "w+");
+    f = fopen(path, "w+");
     for(size_t i = 0; i < size; i++)
     {
         for(size_t j = 0; j < 1024; j++)
@@ -118,13 +118,12 @@ void Net_save(double **net, size_t size)
     fclose(f);
 }
 
-void Net_open(double **net, size_t size)
+void Net_open(double **net, size_t size, char *path)
 {
 
     FILE *f;
-    f = fopen("netmap", "r");
+    f = fopen(path, "r");
     char tab[11] = {'_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '\0'};
-    size_t id = 0;
     for(size_t i = 0; i < size; i++)
     {
         for(size_t j = 0; j < 1024; j++)

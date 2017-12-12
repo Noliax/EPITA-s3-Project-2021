@@ -247,6 +247,11 @@ struct BlockList *RLSA(GdkPixbuf *buffer, int hsv, int vsv, int ahsv) {
     }
   }
 
+  for(size_t i = 0; i < words->size; i++)
+  {
+    DisplayBlock(buffer, words->data[i]);
+  }
+
   // CLEAN THIS MESS
   BlockList_destroy(words);
   BlockList_destroy(lines);

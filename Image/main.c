@@ -11,7 +11,7 @@ static void activate(GtkApplication *app,
   GtkWidget *window;
   GtkWidget *scroll;
   GtkWidget *img;
-  char *path = "texte.png";
+  char *path = "texte4.png";
 
   window = gtk_application_window_new(app);
   gtk_window_set_title(GTK_WINDOW(window), "OCR Segmentation");
@@ -37,17 +37,15 @@ static void activate(GtkApplication *app,
   struct BlockList *blocks = RLSA(buffer, hsv, vsv, ahsv);
 
   // Display for the show
-  for(size_t i = 0; i < 5 && i < blocks->size; i++)
+  for(size_t i = 0; i < blocks->size; i++)
   {
-    DisplayBlock(buffer, blocks->data[i]); 
+    //DisplayBlock(buffer, blocks->data[i]); 
   }
-  printf("%zu characters !", blocks->size);
 
   int** matrices = BlocksToMat(buffer, blocks);
   
-  for(size_t i = 0; i < 5 && i < blocks->size; i++)
-    print_mat(matrices[i]);
 
+  //Clean
   for(size_t i = 0; i < 32; i++)
   {
     int *mat = matrices[i];

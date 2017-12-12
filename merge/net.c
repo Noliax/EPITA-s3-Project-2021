@@ -49,24 +49,6 @@ void Net_add(double *letter, double *image, size_t size)
         letter[i] = y;
     }
 }
-/*
-char Net_read(double *img, double **net, size_t net_size)
-{
-    double min = (Net_dif(net[0], img, net_size));
-    double diff;
-    size_t id = 0;
-    for(size_t out = 0; out < net_size; out++)
-    {
-        diff = (Net_dif(net[out], img, net_size));
-        if(diff < min)
-        {
-            min = diff;
-            id = out;
-        }
-    }
-    return Net_decode(id);
-}
-*/
 
 char Net_read(double *img, double **net, size_t net_size)
 {

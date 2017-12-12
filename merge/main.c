@@ -15,7 +15,7 @@ void printDoubleMat(double *mat)
 int main(int argc, char **argv)
 {
     gtk_init(&argc, &argv);
-    char *path = "texte.png";
+    char *path = "texteclean.png";
 
     size_t in_size = 32;
     size_t out_size = 26 + 26 + 10 + 7;
@@ -83,6 +83,24 @@ int main(int argc, char **argv)
       "20 Dieu dit : \" Que l' eau pullule d'animaux vivants et que des oiseaux volent dans le ciel au- \n"
       "dessus de la terre ! \" \n";
 
+    for(size_t i = 0; i < mat_size; i++)
+    {
+        if((size_t)(doubleMat[i]) == 0 || (size_t)(doubleMat[i]) == 1)
+            continue;
+        else
+        {
+            Net_learn(doubleMat[i], network, text[i]);
+        }
+    }
+    for(size_t i = 0; i < mat_size; i++)
+    {
+        if((size_t)(doubleMat[i]) == 0 || (size_t)(doubleMat[i]) == 1)
+            continue;
+        else
+        {
+            Net_learn(doubleMat[i], network, text[i]);
+        }
+    }
     for(size_t i = 0; i < mat_size; i++)
     {
         if((size_t)(doubleMat[i]) == 0 || (size_t)(doubleMat[i]) == 1)

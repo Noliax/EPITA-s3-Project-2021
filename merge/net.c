@@ -111,24 +111,11 @@ void Net_save(double **net, size_t size)
     {
         for(size_t j = 0; j < 1024; j++)
         {
+            if(net[i][j] >= 0) fprintf(f,"+");
             fprintf(f, "%f ",net[i][j]);
         }
-        fprintf(f, "\n");
     }
-}
-
-double Net_charTabToDouble(char *tab)
-{
-    double res = (double)(tab[0] - '0');
-    double sum;
-    int mul = 1;
-    for(size_t i = 2; i < 8; i++)
-    {
-        sum += tab[i]*mul;
-        mul *= 10;
-    }
-    sum /= 1000000;
-    return res + sum;
+    fclose(f);
 }
 
 void Net_open(double **net, size_t size)
@@ -136,16 +123,14 @@ void Net_open(double **net, size_t size)
 
     FILE *f;
     f = fopen("netmap", "r");
-    char tab[8] = {'_', '_', '_', '_', '_', '_', '_', '_'};
+    char tab[11] = {'_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '\0'};
     size_t id = 0;
     for(size_t i = 0; i < size; i++)
     {
         for(size_t j = 0; j < 1024; j++)
         {
-            for(id = 0; id < 8; id++)
-                tab[id] = fgetc(f);
-            net[i][j] = Net_charTabToDouble(tab);
+            fgets(tab, 11, f);
+            sscanf(tab, "%lf", &net[i][j]);
         }
     }
 }
-

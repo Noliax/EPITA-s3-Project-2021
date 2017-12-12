@@ -29,8 +29,6 @@ void Net_learn(double *img, double **net, char res);
 
 void Net_save(double **net, size_t size);
 
-double Net_charTabToDouble(char *tab);
-
 void Net_open(double **net, size_t size);
 
 #endif

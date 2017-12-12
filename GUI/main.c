@@ -110,6 +110,7 @@ G_MODULE_EXPORT void on_BoutonTourner2_clicked()
 
 G_MODULE_EXPORT void on_BoutonContour_clicked()
 {
+  printf("gggg\n");
   // value for words
   int hsv = 8;
   int vsv = 30;
